@@ -1,0 +1,120 @@
+<!DOCTYPE >
+
+
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-top: 20px;
+           
+        }
+
+        .card {
+            width: 18rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            box-shadow: 0px 0px 10px rgb(0 0 0 / 10%);
+            margin-left: -1000px;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        .card-img-top {
+            width: 80px;
+            height: 80px;
+            margin-right: 20px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            margin-bottom: 0;
+            font-weight: bold;
+        }
+
+        .card-text {
+            font-size: 18px;
+            margin-bottom: 0;
+        }
+
+        .date-time {
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title" id="city"></h5>
+                <img src="" id="weather-icon" class="card-img-top">
+                <p class="card-text" id="temperature"></p>
+                <!-- <p class="card-text" id="latitude"></p>
+                <p class="card-text" id="longitude"></p> -->
+                <p class="card-text" id="date"></p>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        const apiKey = "5f81365ae536b7da813d034c891315db";
+        const weatherUrl = "https://api.openweathermap.org/data/2.5/weather";
+        $(document).ready(function () {
+            // Get the user's location
+            navigator.geolocation.getCurrentPosition(function (position) {
+                let latitude = position.coords.latitude;
+                let longitude = position.coords.longitude;
+
+                // Make the API call to get the weather information
+                $.ajax({
+                    url: weatherUrl + "?lat=" + latitude + "&lon=" + longitude + "&appid=" + apiKey + "&units=metric",
+                    success: function (result) {
+                        console.log(result);
+
+                        // Update the weather information on the page
+                        $("#city").html(result.name);
+                        $("#weather-icon").attr("src", "http://openweathermap.org/img/w/" + result.weather[0].icon + ".png");
+                        $("#temperature").html("Temperature: " + result.main.temp + "&#8451;");
+                        $("#latitude").html("Latitude: " + latitude);
+                        $("#longitude").html("Longitude: " + longitude);
+
+                        // Use Moment.js to format the date
+                        let date = moment().format("MMMM Do YYYY, h:mm:ss a");
+                        $("#date").html("Today's date: " + date);
+                    }
+                });
+            });
+        });
+    </script>
